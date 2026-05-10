@@ -170,7 +170,7 @@ class MovieController
     public function myRatings(): void
     {
         $payload = Middleware::auth();
-        Response::json($this->ratingModel->getByUser((int) $payload['sub']));
+        Response::json($this->hydrateMovieRows($this->ratingModel->getByUser((int) $payload['sub'])));
     }
 
     // ----------------------------------------------------------
@@ -182,7 +182,7 @@ class MovieController
     {
         $payload = Middleware::auth();
         $watched = isset($_GET['watched']) ? (bool) $_GET['watched'] : null;
-        Response::json($this->watchlistModel->getByUser((int) $payload['sub'], $watched));
+        Response::json($this->hydrateMovieRows($this->watchlistModel->getByUser((int) $payload['sub'], $watched)));
     }
 
     // POST /movies/:id/watchlist
@@ -190,6 +190,7 @@ class MovieController
     {
         $payload = Middleware::auth();
         $tmdbId  = (int) $params['id'];
+        $this->tmdb->getMovieDetails($tmdbId, $_GET['lang'] ?? 'pt-BR');
         $this->watchlistModel->add((int) $payload['sub'], $tmdbId);
         Response::success(null, 'Adicionado à watchlist.');
     }
@@ -220,7 +221,7 @@ class MovieController
     public function myFavorites(): void
     {
         $payload = Middleware::auth();
-        Response::json($this->favoriteModel->getByUser((int) $payload['sub']));
+        Response::json($this->hydrateMovieRows($this->favoriteModel->getByUser((int) $payload['sub'])));
     }
 
     // POST /movies/:id/favorite
@@ -228,8 +229,18 @@ class MovieController
     {
         $payload = Middleware::auth();
         $tmdbId  = (int) $params['id'];
+        $this->tmdb->getMovieDetails($tmdbId, $_GET['lang'] ?? 'pt-BR');
         $action  = $this->favoriteModel->toggle((int) $payload['sub'], $tmdbId);
         Response::success(['action' => $action], $action === 'added' ? 'Adicionado aos favoritos.' : 'Removido dos favoritos.');
+    }
+
+    // DELETE /movies/:id/favorite
+    public function removeFavorite(array $params): void
+    {
+        $payload = Middleware::auth();
+        $tmdbId  = (int) $params['id'];
+        $this->favoriteModel->remove((int) $payload['sub'], $tmdbId);
+        Response::success(null, 'Removido dos favoritos.');
     }
 
     // ----------------------------------------------------------
@@ -264,6 +275,32 @@ class MovieController
                 [$userId, $genre['id'], $genre['name'], max(1, 1 + $delta), $delta]
             );
         }
+    }
+
+    private function hydrateMovieRows(array $rows): array
+    {
+        $lang = $_GET['lang'] ?? 'pt-BR';
+
+        foreach ($rows as &$row) {
+            $hasFallbackTitle = isset($row['title']) && strpos((string) $row['title'], 'Filme #') === 0;
+            if (!empty($row['title']) && !$hasFallbackTitle && !empty($row['poster_path'])) {
+                continue;
+            }
+
+            $details = $this->tmdb->getMovieDetails((int) $row['tmdb_id'], $lang);
+            if (!$details) {
+                $row['title'] = 'Filme #' . $row['tmdb_id'];
+                continue;
+            }
+
+            $row['title'] = $details['title'] ?? $details['original_title'] ?? ('Filme #' . $row['tmdb_id']);
+            $row['poster_path'] = $details['poster_path'] ?? null;
+            $row['release_date'] = $details['release_date'] ?? null;
+            $row['vote_average'] = $details['vote_average'] ?? null;
+        }
+        unset($row);
+
+        return $rows;
     }
 
     private function json(): array

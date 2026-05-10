@@ -19,7 +19,9 @@ class Rating
     public function getByUser(int $userId): array
     {
         return $this->db->query(
-            'SELECT r.*, mc.title, mc.poster_path, mc.release_date
+            'SELECT r.id, r.user_id, r.tmdb_id, r.score, r.review, r.created_at, r.updated_at,
+                    COALESCE(NULLIF(mc.title, \'\'), CONCAT(\'Filme #\', r.tmdb_id)) AS title,
+                    mc.poster_path, mc.release_date
              FROM ratings r
              LEFT JOIN movies_cache mc ON mc.tmdb_id = r.tmdb_id
              WHERE r.user_id = ?
@@ -83,7 +85,9 @@ class Watchlist
 
     public function getByUser(int $userId, ?bool $watched = null): array
     {
-        $sql    = 'SELECT w.*, mc.title, mc.poster_path, mc.release_date, mc.vote_average
+        $sql    = 'SELECT w.id, w.user_id, w.tmdb_id, w.watched, w.added_at, w.watched_at,
+                          COALESCE(NULLIF(mc.title, \'\'), CONCAT(\'Filme #\', w.tmdb_id)) AS title,
+                          mc.poster_path, mc.release_date, mc.vote_average
                    FROM watchlist w
                    LEFT JOIN movies_cache mc ON mc.tmdb_id = w.tmdb_id
                    WHERE w.user_id = ?';
@@ -142,7 +146,9 @@ class Favorite
     public function getByUser(int $userId): array
     {
         return $this->db->query(
-            'SELECT f.*, mc.title, mc.poster_path, mc.release_date, mc.vote_average
+            'SELECT f.id, f.user_id, f.tmdb_id, f.added_at,
+                    COALESCE(NULLIF(mc.title, \'\'), CONCAT(\'Filme #\', f.tmdb_id)) AS title,
+                    mc.poster_path, mc.release_date, mc.vote_average
              FROM favorites f
              LEFT JOIN movies_cache mc ON mc.tmdb_id = f.tmdb_id
              WHERE f.user_id = ?
@@ -171,5 +177,13 @@ class Favorite
             [$userId, $tmdbId]
         );
         return 'added';
+    }
+
+    public function remove(int $userId, int $tmdbId): void
+    {
+        $this->db->query(
+            'DELETE FROM favorites WHERE user_id = ? AND tmdb_id = ?',
+            [$userId, $tmdbId]
+        );
     }
 }

@@ -195,8 +195,16 @@ class TmdbService
                  release_date, genres, vote_average, vote_count, popularity, cached_at)
              VALUES (?,?,?,?,?,?,?,?,?,?,?, NOW())
              ON DUPLICATE KEY UPDATE
-                title=VALUES(title), overview=VALUES(overview),
-                vote_average=VALUES(vote_average), vote_count=VALUES(vote_count),
+                title=VALUES(title),
+                original_title=VALUES(original_title),
+                overview=VALUES(overview),
+                poster_path=VALUES(poster_path),
+                backdrop_path=VALUES(backdrop_path),
+                release_date=VALUES(release_date),
+                genres=VALUES(genres),
+                vote_average=VALUES(vote_average),
+                vote_count=VALUES(vote_count),
+                popularity=VALUES(popularity),
                 cached_at=NOW()',
             [
                 $movie['id'],

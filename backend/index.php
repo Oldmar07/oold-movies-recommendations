@@ -44,6 +44,7 @@ if (in_array($origin, ALLOWED_ORIGINS, true) || preg_match('#^http://localhost:\
 }
 header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization, Accept');
+header('Access-Control-Expose-Headers: Content-Disposition');
 header('Access-Control-Allow-Credentials: true');
 header('Content-Type: application/json; charset=UTF-8');
 
@@ -97,6 +98,7 @@ $router->post(  '/movies/:id/watchlist',       fn($p)   => $movies->addToWatchli
 $router->delete('/movies/:id/watchlist',       fn($p)   => $movies->removeFromWatchlist($p));
 $router->put(   '/movies/:id/watchlist/watched', fn($p) => $movies->markWatched($p));
 $router->post(  '/movies/:id/favorite',        fn($p)   => $movies->toggleFavorite($p));
+$router->delete('/movies/:id/favorite',        fn($p)   => $movies->removeFavorite($p));
 
 // User
 $router->get('/user/profile',   fn() => $users->profile());
