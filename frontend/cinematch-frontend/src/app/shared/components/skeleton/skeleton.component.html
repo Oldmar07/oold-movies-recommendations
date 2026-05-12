@@ -1,0 +1,65 @@
+<ng-container [ngSwitch]="variant">
+  <div *ngSwitchCase="'home'" class="skeleton-home">
+    <div class="skeleton-hero">
+      <span class="sk sk-badge"></span>
+      <span class="sk sk-title"></span>
+      <span class="sk sk-line wide"></span>
+      <span class="sk sk-line"></span>
+      <span class="sk sk-button"></span>
+    </div>
+    <div class="skeleton-section">
+      <span class="sk sk-heading"></span>
+      <div class="skeleton-grid">
+        <div class="skeleton-card" *ngFor="let item of items">
+          <span class="sk sk-poster"></span>
+          <span class="sk sk-line"></span>
+          <span class="sk sk-line short"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngSwitchCase="'detail'" class="skeleton-detail">
+    <span class="sk sk-backdrop"></span>
+    <div class="skeleton-detail-body">
+      <span class="sk sk-detail-poster"></span>
+      <div class="skeleton-detail-info">
+        <span class="sk sk-title"></span>
+        <span class="sk sk-line short"></span>
+        <div class="skeleton-badges">
+          <span class="sk sk-badge"></span>
+          <span class="sk sk-badge"></span>
+          <span class="sk sk-badge"></span>
+        </div>
+        <span class="sk sk-line wide"></span>
+        <span class="sk sk-line wide"></span>
+        <span class="sk sk-line"></span>
+        <span class="sk sk-button"></span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngSwitchCase="'list'" class="skeleton-list">
+    <div class="skeleton-list-card" *ngFor="let item of items">
+      <span class="sk sk-list-poster"></span>
+      <div class="skeleton-list-info">
+        <span class="sk sk-line wide"></span>
+        <span class="sk sk-line short"></span>
+      </div>
+      <span class="sk sk-button"></span>
+    </div>
+  </div>
+
+  <div *ngSwitchCase="'table'" class="skeleton-table">
+    <span class="sk sk-line wide"></span>
+    <span class="sk sk-row" *ngFor="let item of items"></span>
+  </div>
+
+  <div *ngSwitchDefault class="skeleton-grid">
+    <div class="skeleton-card" *ngFor="let item of items">
+      <span class="sk sk-poster"></span>
+      <span class="sk sk-line"></span>
+      <span class="sk sk-line short"></span>
+    </div>
+  </div>
+</ng-container>

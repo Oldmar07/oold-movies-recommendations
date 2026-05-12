@@ -1,0 +1,139 @@
+{
+  "app": {
+    "name": "OOLD",
+    "tagline": "Descobre o teu próximo filme favorito"
+  },
+  "nav": {
+    "home": "Início",
+    "search": "Pesquisar",
+    "filter": "Filtrar",
+    "watchlist": "Watchlist",
+    "favorites": "Favoritos",
+    "profile": "Perfil",
+    "admin": "Admin",
+    "login": "Entrar",
+    "register": "Registar",
+    "logout": "Sair"
+  },
+  "home": {
+    "forYou": "Recomendado para Ti",
+    "popular": "Populares",
+    "topRated": "Mais Bem Avaliados",
+    "nowPlaying": "Em Exibição",
+    "upcoming": "Em Breve",
+    "seeAll": "Ver todos"
+  },
+  "movie": {
+    "overview": "Sinopse",
+    "cast": "Elenco",
+    "trailer": "Trailer",
+    "similar": "Filmes Similares",
+    "recommendations": "Recomendações",
+    "rating": "Avaliação",
+    "yourRating": "A tua avaliação",
+    "addRating": "Avaliar",
+    "addToWatchlist": "Adicionar à Watchlist",
+    "removeFromWatchlist": "Remover da Watchlist",
+    "markWatched": "Marcar como Assistido",
+    "addFavorite": "Adicionar aos Favoritos",
+    "removeFavorite": "Remover dos Favoritos",
+    "release": "Lançamento",
+    "runtime": "Duração",
+    "genres": "Géneros",
+    "minutes": "min",
+    "noOverview": "Sem sinopse disponível."
+  },
+  "auth": {
+    "login": "Entrar",
+    "register": "Criar Conta",
+    "logout": "Sair",
+    "email": "Email",
+    "password": "Senha",
+    "name": "Nome completo",
+    "confirmPassword": "Confirmar Senha",
+    "forgotPassword": "Esqueceu a senha?",
+    "resetPassword": "Redefinir Senha",
+    "newPassword": "Nova Senha",
+    "sendReset": "Enviar instruções",
+    "backToLogin": "Voltar ao login",
+    "noAccount": "Não tens conta?",
+    "hasAccount": "Já tens conta?",
+    "registerHere": "Regista-te aqui",
+    "loginHere": "Entra aqui"
+  },
+  "profile": {
+    "title": "O meu Perfil",
+    "editProfile": "Editar Perfil",
+    "changePassword": "Alterar Senha",
+    "myRatings": "As minhas Avaliações",
+    "myWatchlist": "A minha Watchlist",
+    "myFavorites": "Os meus Favoritos",
+    "currentPassword": "Senha actual",
+    "newPassword": "Nova senha",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "language": "Idioma",
+    "theme": "Tema",
+    "light": "Claro",
+    "dark": "Escuro"
+  },
+  "export": {
+    "title": "Exportar Dados",
+    "watchlistCsv": "Watchlist (CSV)",
+    "ratingsCsv": "Avaliações (CSV)",
+    "favoritesCsv": "Favoritos (CSV)",
+    "ratingsPdf": "Avaliações (PDF)"
+  },
+  "search": {
+    "placeholder": "Pesquisar filmes...",
+    "results": "Resultados para",
+    "noResults": "Nenhum resultado encontrado.",
+    "genres": "Géneros"
+  },
+  "watchlist": {
+    "title": "A minha Watchlist",
+    "empty": "A tua watchlist está vazia.",
+    "watched": "Assistidos",
+    "toWatch": "Para Ver",
+    "all": "Todos"
+  },
+  "favorites": {
+    "title": "Os meus Favoritos",
+    "empty": "Ainda não tens favoritos."
+  },
+  "ratings": {
+    "title": "As minhas Avaliações",
+    "empty": "Ainda não avaliaste nenhum filme.",
+    "review": "Crítica",
+    "score": "Nota",
+    "delete": "Remover avaliação"
+  },
+  "admin": {
+    "title": "Painel Admin",
+    "users": "Utilizadores",
+    "totalUsers": "Total de utilizadores",
+    "deleteUser": "Eliminar",
+    "confirmDelete": "Tens a certeza que queres eliminar este utilizador?"
+  },
+  "common": {
+    "loading": "A carregar...",
+    "error": "Ocorreu um erro. Tenta novamente.",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "confirm": "Confirmar",
+    "back": "Voltar",
+    "noData": "Sem dados disponíveis.",
+    "page": "Página",
+    "of": "de",
+    "previous": "Anterior",
+    "next": "Seguinte"
+  },
+  "errors": {
+    "required": "Campo obrigatório.",
+    "invalidEmail": "Email inválido.",
+    "minLength": "Mínimo {{min}} caracteres.",
+    "passwordMismatch": "As senhas não coincidem.",
+    "weakPassword": "Senha fraca. Use mínimo 8 caracteres, 1 maiúscula e 1 número."
+  }
+}

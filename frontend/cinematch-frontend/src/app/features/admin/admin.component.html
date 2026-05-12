@@ -1,0 +1,42 @@
+<!-- admin.component.html -->
+<div class="pt-navbar container admin-page">
+  <h1 class="section-title">{{ 'admin.title' | translate }}</h1>
+  <p class="admin-stat">{{ 'admin.totalUsers' | translate }}: <strong>{{ total }}</strong></p>
+
+  <app-skeleton *ngIf="loading" variant="table" [rows]="6"></app-skeleton>
+
+  <div class="admin-table-wrap" *ngIf="!loading">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Papel</th>
+          <th>Registo</th>
+          <th>Acções</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of users">
+          <td>{{ u.id }}</td>
+          <td>{{ u.name }}</td>
+          <td>{{ u.email }}</td>
+          <td><span class="badge" [class.badge-primary]="u.role==='admin'" [class.badge-muted]="u.role==='user'">{{ u.role }}</span></td>
+          <td>{{ u.created_at | slice:0:10 }}</td>
+          <td>
+            <button class="btn btn-danger btn-sm" (click)="deleteUser(u.id)" *ngIf="u.role !== 'admin'">
+              {{ 'admin.deleteUser' | translate }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="lastPage > 1">
+    <button class="btn btn-outline btn-sm" (click)="prevPage()" [disabled]="page===1">← {{ 'common.previous' | translate }}</button>
+    <span>{{ page }} / {{ lastPage }}</span>
+    <button class="btn btn-outline btn-sm" (click)="nextPage()" [disabled]="page===lastPage">{{ 'common.next' | translate }} →</button>
+  </div>
+</div>

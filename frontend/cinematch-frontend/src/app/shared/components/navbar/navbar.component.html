@@ -1,0 +1,120 @@
+<nav class="navbar">
+  <div class="container navbar-inner">
+
+    <!-- Logo -->
+    <a routerLink="/" class="navbar-logo">
+      <img src="assets/oold_navbar_logo_red.png" alt="OOLD" />
+    </a>
+
+    <!-- Search (desktop) -->
+    <div class="navbar-search">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="search()"
+        [placeholder]="'search.placeholder' | translate"
+        class="search-input"
+      />
+      <button (click)="search()" class="search-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Links desktop -->
+    <div class="navbar-links">
+      <select class="genre-select" [(ngModel)]="selectedGenre" (change)="filterByGenre()" [attr.aria-label]="'nav.filter' | translate">
+        <option value="" disabled>{{ 'nav.filter' | translate }}</option>
+        <option *ngFor="let genre of genres; trackBy: trackByGenreId" [value]="genre.id">{{ genre.name }}</option>
+      </select>
+      <a routerLink="/"              routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">{{ 'nav.home' | translate }}</a>
+
+      <ng-container *ngIf="auth.isLoggedIn">
+        <a routerLink="/profile/watchlist" routerLinkActive="active">{{ 'nav.watchlist' | translate }}</a>
+        <a routerLink="/profile/favorites" routerLinkActive="active">{{ 'nav.favorites' | translate }}</a>
+      </ng-container>
+
+      <a *ngIf="auth.isAdmin" routerLink="/admin" routerLinkActive="active">{{ 'nav.admin' | translate }}</a>
+    </div>
+
+    <!-- Actions desktop -->
+    <div class="navbar-actions">
+
+      <!-- Language toggle -->
+      <div class="lang-toggle">
+        <button (click)="switchLang('pt')" [class.active]="translate.currentLang === 'pt'">PT</button>
+        <span>|</span>
+        <button (click)="switchLang('en')" [class.active]="translate.currentLang === 'en'">EN</button>
+      </div>
+
+      <!-- Theme toggle -->
+      <button class="icon-btn" (click)="toggleTheme()" [title]="isDark ? 'Modo claro' : 'Modo escuro'">
+        <svg *ngIf="!isDark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg *ngIf="isDark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+
+      <!-- Auth -->
+      <ng-container *ngIf="!auth.isLoggedIn">
+        <a routerLink="/auth/login" class="btn btn-outline btn-sm">{{ 'nav.login' | translate }}</a>
+        <a routerLink="/auth/register" class="btn btn-primary btn-sm">{{ 'nav.register' | translate }}</a>
+      </ng-container>
+
+      <ng-container *ngIf="auth.isLoggedIn">
+        <a routerLink="/profile" class="avatar-btn">
+          <img *ngIf="user?.avatar_url" [src]="user?.avatar_url" alt="avatar" />
+          <span *ngIf="!user?.avatar_url">{{ user?.name?.charAt(0) | uppercase }}</span>
+        </a>
+        <button (click)="logout()" class="btn btn-outline btn-sm">{{ 'nav.logout' | translate }}</button>
+      </ng-container>
+    </div>
+
+    <!-- Hamburger (mobile) -->
+    <button class="hamburger icon-btn" (click)="menuOpen = !menuOpen">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" [class.open]="menuOpen">
+    <div class="mobile-search">
+      <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="search()"
+             [placeholder]="'search.placeholder' | translate" class="search-input" />
+      <button (click)="search()" class="search-btn">🔍</button>
+    </div>
+    <select class="genre-select mobile-genre-select" [(ngModel)]="selectedGenre" (change)="filterByGenre()" [attr.aria-label]="'nav.filter' | translate">
+      <option value="" disabled>{{ 'nav.filter' | translate }}</option>
+      <option *ngFor="let genre of genres; trackBy: trackByGenreId" [value]="genre.id">{{ genre.name }}</option>
+    </select>
+    <a routerLink="/"              (click)="menuOpen=false">{{ 'nav.home' | translate }}</a>
+    <ng-container *ngIf="auth.isLoggedIn">
+      <a routerLink="/profile/watchlist" (click)="menuOpen=false">{{ 'nav.watchlist' | translate }}</a>
+      <a routerLink="/profile/favorites" (click)="menuOpen=false">{{ 'nav.favorites' | translate }}</a>
+      <a routerLink="/profile"           (click)="menuOpen=false">{{ 'nav.profile' | translate }}</a>
+    </ng-container>
+    <a *ngIf="auth.isAdmin" routerLink="/admin" (click)="menuOpen=false">{{ 'nav.admin' | translate }}</a>
+    <div class="mobile-actions">
+      <div class="lang-toggle">
+        <button (click)="switchLang('pt')" [class.active]="translate.currentLang==='pt'">PT</button>
+        <span>|</span>
+        <button (click)="switchLang('en')" [class.active]="translate.currentLang==='en'">EN</button>
+      </div>
+      <button class="icon-btn" (click)="toggleTheme()">{{ isDark ? '☀️' : '🌙' }}</button>
+      <ng-container *ngIf="!auth.isLoggedIn">
+        <a routerLink="/auth/login"    class="btn btn-outline btn-sm" (click)="menuOpen=false">{{ 'nav.login' | translate }}</a>
+        <a routerLink="/auth/register" class="btn btn-primary btn-sm" (click)="menuOpen=false">{{ 'nav.register' | translate }}</a>
+      </ng-container>
+      <button *ngIf="auth.isLoggedIn" (click)="logout()" class="btn btn-outline btn-sm">{{ 'nav.logout' | translate }}</button>
+    </div>
+  </div>
+</nav>

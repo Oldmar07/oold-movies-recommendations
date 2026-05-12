@@ -1,0 +1,22 @@
+<!-- ratings.component.html -->
+<div class="pt-navbar container list-page">
+  <h1 class="section-title">{{ 'ratings.title' | translate }}</h1>
+  <app-skeleton *ngIf="loading" variant="list" [rows]="4"></app-skeleton>
+  <div class="empty-state" *ngIf="!loading && !items.length"><p>{{ 'ratings.empty' | translate }}</p></div>
+  <div class="list-grid" *ngIf="!loading && items.length">
+    <div class="list-card card" *ngFor="let item of items">
+      <img [src]="posterUrl(item.poster_path)" [alt]="item.title" />
+      <div class="list-info">
+        <a [routerLink]="['/movies', item.tmdb_id]" class="list-title">{{ item.title }}</a>
+        <p class="list-meta">{{ item.release_date | slice:0:4 }}</p>
+        <div class="rating-display">
+          <span class="score-chip">⭐ {{ item.score }}/10</span>
+          <p class="review-text" *ngIf="item.review">{{ item.review }}</p>
+        </div>
+      </div>
+      <div class="list-actions">
+        <button class="btn btn-danger btn-sm" (click)="delete(item.tmdb_id)">{{ 'ratings.delete' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>

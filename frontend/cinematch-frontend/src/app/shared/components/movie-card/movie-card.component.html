@@ -1,0 +1,20 @@
+<!-- movie-card.component.html -->
+<div class="movie-card" (click)="goToDetail()">
+  <div class="poster-wrap">
+    <img
+      [src]="movieService.posterUrl(movie.poster_path)"
+      [alt]="movie.title"
+      loading="lazy"
+      class="poster"
+    />
+    <div class="poster-overlay">
+      <button class="action-btn" (click)="toggleFavorite($event)" title="Favorito">❤️</button>
+      <button class="action-btn" (click)="addToWatchlist($event)" title="Watchlist">🔖</button>
+    </div>
+    <div class="rating-badge">⭐ {{ rating }}</div>
+  </div>
+  <div class="card-body">
+    <h3 class="movie-title">{{ movie.title }}</h3>
+    <p class="movie-year">{{ year }}</p>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+<!-- home.component.html -->
+<div class="pt-navbar">
+
+  <!-- Hero -->
+  <app-skeleton *ngIf="loading" variant="home" [rows]="5"></app-skeleton>
+
+  <div class="hero" *ngIf="!loading" [style.backgroundImage]="'url(' + heroBackdrop + ')'">
+    <div class="hero-overlay">
+      <div class="container hero-content" *ngIf="hero as heroMovie">
+        <span class="badge badge-primary">Em Exibição</span>
+        <h1 class="hero-title">{{ heroMovie.title }}</h1>
+        <p class="hero-overview">{{ heroMovie.overview | slice:0:200 }}{{ (heroMovie.overview?.length || 0) > 200 ? '...' : '' }}</p>
+        <div class="hero-actions">
+          <a [routerLink]="['/movies', heroMovie.id]" class="btn btn-primary btn-lg">
+            ▶ Ver Detalhes
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" *ngIf="!loading">
+    <div class="alert alert-error" *ngIf="error">{{ error }}</div>
+
+    <!-- Para Ti -->
+    <section class="section" *ngIf="auth.isLoggedIn && forYou.length">
+      <div class="section-header">
+        <h2 class="section-title">{{ 'home.forYou' | translate }}</h2>
+        <a routerLink="/movies/search" class="btn btn-ghost btn-sm">{{ 'home.seeAll' | translate }} →</a>
+      </div>
+      <div class="movies-grid">
+        <app-movie-card *ngFor="let m of forYou; trackBy: trackByMovieId" [movie]="m"></app-movie-card>
+      </div>
+    </section>
+
+    <!-- Populares -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">{{ 'home.popular' | translate }}</h2>
+        <a routerLink="/movies/search" class="btn btn-ghost btn-sm">{{ 'home.seeAll' | translate }} →</a>
+      </div>
+      <div class="movies-grid">
+        <app-movie-card *ngFor="let m of popular; trackBy: trackByMovieId" [movie]="m"></app-movie-card>
+      </div>
+    </section>
+
+    <!-- Em Exibição -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">{{ 'home.nowPlaying' | translate }}</h2>
+      </div>
+      <div class="movies-grid">
+        <app-movie-card *ngFor="let m of nowPlaying; trackBy: trackByMovieId" [movie]="m"></app-movie-card>
+      </div>
+    </section>
+
+    <!-- Mais Bem Avaliados -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">{{ 'home.topRated' | translate }}</h2>
+      </div>
+      <div class="movies-grid">
+        <app-movie-card *ngFor="let m of topRated; trackBy: trackByMovieId" [movie]="m"></app-movie-card>
+      </div>
+    </section>
+
+    <!-- Em Breve -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">{{ 'home.upcoming' | translate }}</h2>
+      </div>
+      <div class="movies-grid">
+        <app-movie-card *ngFor="let m of upcoming; trackBy: trackByMovieId" [movie]="m"></app-movie-card>
+      </div>
+    </section>
+
+  </div>
+</div>

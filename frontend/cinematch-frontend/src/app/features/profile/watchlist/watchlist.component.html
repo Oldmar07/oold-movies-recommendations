@@ -1,0 +1,27 @@
+<!-- watchlist.component.html -->
+<div class="pt-navbar container list-page">
+  <h1 class="section-title">{{ 'watchlist.title' | translate }}</h1>
+  <div class="filter-tabs">
+    <button [class.active]="filter==='all'" (click)="setFilter('all')">{{ 'watchlist.all' | translate }}</button>
+    <button [class.active]="filter==='toWatch'" (click)="setFilter('toWatch')">{{ 'watchlist.toWatch' | translate }}</button>
+    <button [class.active]="filter==='watched'" (click)="setFilter('watched')">{{ 'watchlist.watched' | translate }}</button>
+  </div>
+  <app-skeleton *ngIf="loading" variant="list" [rows]="4"></app-skeleton>
+  <div class="empty-state" *ngIf="!loading && !items.length"><p>{{ 'watchlist.empty' | translate }}</p></div>
+  <div class="list-grid" *ngIf="!loading && items.length">
+    <div class="list-card card" *ngFor="let item of items">
+      <img [src]="posterUrl(item.poster_path)" [alt]="title(item)" />
+      <div class="list-info">
+        <a [routerLink]="['/movies', item.tmdb_id]" class="list-title">{{ title(item) }}</a>
+        <p class="list-meta">{{ meta(item) }}</p>
+        <span class="badge" [class.badge-primary]="item.watched" [class.badge-muted]="!item.watched">
+          {{ item.watched ? ('watchlist.watched' | translate) : ('watchlist.toWatch' | translate) }}
+        </span>
+      </div>
+      <div class="list-actions">
+        <button *ngIf="!item.watched" class="btn btn-outline btn-sm" (click)="markWatched(item.tmdb_id)">Assistido</button>
+        <button class="btn btn-danger btn-sm" (click)="remove(item.tmdb_id)">Remover</button>
+      </div>
+    </div>
+  </div>
+</div>

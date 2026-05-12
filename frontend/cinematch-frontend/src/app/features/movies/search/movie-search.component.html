@@ -1,0 +1,35 @@
+<!-- movie-search.component.html -->
+<div class="pt-navbar container search-page">
+  <div class="search-bar-large">
+    <input type="text" [(ngModel)]="query" (ngModelChange)="doSearch()"
+           [placeholder]="'search.placeholder' | translate" class="form-control search-input-lg" />
+  </div>
+
+  <!-- Genres -->
+  <div class="genres-section" *ngIf="genres.length && !query">
+    <h3 class="section-title">{{ 'search.genres' | translate }}</h3>
+    <div class="genres-list">
+      <button *ngFor="let g of genres; trackBy: trackByGenreId" class="genre-chip" (click)="goToGenre(g.id)">{{ g.name }}</button>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div *ngIf="query">
+    <p class="results-label">{{ 'search.results' | translate }}: <strong>"{{ query }}"</strong></p>
+    <app-skeleton *ngIf="loading" variant="grid" [rows]="8"></app-skeleton>
+
+    <div class="movies-grid" *ngIf="!loading && results.length">
+      <app-movie-card *ngFor="let m of results; trackBy: trackByMovieId" [movie]="m"></app-movie-card>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && !results.length">
+      <p>{{ 'search.noResults' | translate }}</p>
+    </div>
+
+    <div class="pagination" *ngIf="totalPages > 1 && !loading">
+      <button class="btn btn-outline btn-sm" (click)="prevPage()" [disabled]="page===1">← {{ 'common.previous' | translate }}</button>
+      <span>{{ page }} / {{ totalPages }}</span>
+      <button class="btn btn-outline btn-sm" (click)="nextPage()" [disabled]="page===totalPages">{{ 'common.next' | translate }} →</button>
+    </div>
+  </div>
+</div>

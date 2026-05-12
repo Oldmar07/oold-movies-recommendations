@@ -1,0 +1,18 @@
+<!-- favorites.component.html -->
+<div class="pt-navbar container list-page">
+  <h1 class="section-title">{{ 'favorites.title' | translate }}</h1>
+  <app-skeleton *ngIf="loading" variant="list" [rows]="4"></app-skeleton>
+  <div class="empty-state" *ngIf="!loading && !items.length"><p>{{ 'favorites.empty' | translate }}</p></div>
+  <div class="list-grid" *ngIf="!loading && items.length">
+    <div class="list-card card" *ngFor="let item of items">
+      <img [src]="posterUrl(item.poster_path)" [alt]="title(item)" />
+      <div class="list-info">
+        <a [routerLink]="['/movies', item.tmdb_id]" class="list-title">{{ title(item) }}</a>
+        <p class="list-meta">{{ meta(item) }}</p>
+      </div>
+      <div class="list-actions">
+        <button class="btn btn-danger btn-sm" (click)="remove(item.tmdb_id)">Remover</button>
+      </div>
+    </div>
+  </div>
+</div>

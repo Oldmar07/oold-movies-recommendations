@@ -1,0 +1,139 @@
+{
+  "app": {
+    "name": "OOLD",
+    "tagline": "Discover your next favourite movie"
+  },
+  "nav": {
+    "home": "Home",
+    "search": "Search",
+    "filter": "Filter",
+    "watchlist": "Watchlist",
+    "favorites": "Favourites",
+    "profile": "Profile",
+    "admin": "Admin",
+    "login": "Sign In",
+    "register": "Sign Up",
+    "logout": "Sign Out"
+  },
+  "home": {
+    "forYou": "Recommended for You",
+    "popular": "Popular",
+    "topRated": "Top Rated",
+    "nowPlaying": "Now Playing",
+    "upcoming": "Upcoming",
+    "seeAll": "See all"
+  },
+  "movie": {
+    "overview": "Overview",
+    "cast": "Cast",
+    "trailer": "Trailer",
+    "similar": "Similar Movies",
+    "recommendations": "Recommendations",
+    "rating": "Rating",
+    "yourRating": "Your rating",
+    "addRating": "Rate",
+    "addToWatchlist": "Add to Watchlist",
+    "removeFromWatchlist": "Remove from Watchlist",
+    "markWatched": "Mark as Watched",
+    "addFavorite": "Add to Favourites",
+    "removeFavorite": "Remove from Favourites",
+    "release": "Release",
+    "runtime": "Runtime",
+    "genres": "Genres",
+    "minutes": "min",
+    "noOverview": "No overview available."
+  },
+  "auth": {
+    "login": "Sign In",
+    "register": "Create Account",
+    "logout": "Sign Out",
+    "email": "Email",
+    "password": "Password",
+    "name": "Full name",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot password?",
+    "resetPassword": "Reset Password",
+    "newPassword": "New Password",
+    "sendReset": "Send instructions",
+    "backToLogin": "Back to login",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "registerHere": "Sign up here",
+    "loginHere": "Sign in here"
+  },
+  "profile": {
+    "title": "My Profile",
+    "editProfile": "Edit Profile",
+    "changePassword": "Change Password",
+    "myRatings": "My Ratings",
+    "myWatchlist": "My Watchlist",
+    "myFavorites": "My Favourites",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "save": "Save",
+    "cancel": "Cancel",
+    "language": "Language",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "export": {
+    "title": "Export Data",
+    "watchlistCsv": "Watchlist (CSV)",
+    "ratingsCsv": "Ratings (CSV)",
+    "favoritesCsv": "Favourites (CSV)",
+    "ratingsPdf": "Ratings (PDF)"
+  },
+  "search": {
+    "placeholder": "Search movies...",
+    "results": "Results for",
+    "noResults": "No results found.",
+    "genres": "Genres"
+  },
+  "watchlist": {
+    "title": "My Watchlist",
+    "empty": "Your watchlist is empty.",
+    "watched": "Watched",
+    "toWatch": "To Watch",
+    "all": "All"
+  },
+  "favorites": {
+    "title": "My Favourites",
+    "empty": "You have no favourites yet."
+  },
+  "ratings": {
+    "title": "My Ratings",
+    "empty": "You haven't rated any movies yet.",
+    "review": "Review",
+    "score": "Score",
+    "delete": "Remove rating"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "users": "Users",
+    "totalUsers": "Total users",
+    "deleteUser": "Delete",
+    "confirmDelete": "Are you sure you want to delete this user?"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred. Please try again.",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "back": "Back",
+    "noData": "No data available.",
+    "page": "Page",
+    "of": "of",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "errors": {
+    "required": "This field is required.",
+    "invalidEmail": "Invalid email address.",
+    "minLength": "Minimum {{min}} characters.",
+    "passwordMismatch": "Passwords do not match.",
+    "weakPassword": "Weak password. Use at least 8 characters, 1 uppercase and 1 number."
+  }
+}

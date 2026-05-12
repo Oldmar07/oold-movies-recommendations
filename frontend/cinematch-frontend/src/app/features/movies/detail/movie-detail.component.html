@@ -1,0 +1,118 @@
+<!-- movie-detail.component.html -->
+<div class="pt-navbar" *ngIf="!loading && movie">
+
+  <!-- Backdrop -->
+  <div class="detail-backdrop"
+       [class.has-video]="trailerKey"
+       [style.backgroundImage]="trailerKey ? null : 'url(' + backdropUrl + ')'">
+    <iframe *ngIf="trailerKey"
+            class="backdrop-video"
+            [src]="trailerBackgroundUrl | safeUrl"
+            title="Trailer background"
+            frameborder="0"
+            allow="autoplay; encrypted-media"
+            tabindex="-1"
+            aria-hidden="true"></iframe>
+    <div class="backdrop-overlay"></div>
+  </div>
+
+  <div class="container detail-layout">
+
+    <!-- Poster -->
+    <div class="detail-poster">
+      <img [src]="movieService.posterUrl(movie.poster_path)" [alt]="movie.title" />
+    </div>
+
+    <!-- Info -->
+    <div class="detail-info">
+      <h1 class="detail-title">{{ movie.title }}</h1>
+      <p class="detail-original" *ngIf="movie.original_title !== movie.title">{{ movie.original_title }}</p>
+
+      <div class="detail-meta">
+        <span class="badge badge-muted">{{ movie.release_date | slice:0:4 }}</span>
+        <span class="badge badge-muted" *ngIf="movie.runtime">{{ movie.runtime }} {{ 'movie.minutes' | translate }}</span>
+        <span class="badge badge-primary">⭐ {{ movie.vote_average ? (movie.vote_average | number:'1.1-1') : 'N/A' }}</span>
+        <span *ngIf="movie.internal_avg_score" class="badge badge-muted">
+          🎬 {{ movie.internal_avg_score }}/10 (comunidade)
+        </span>
+      </div>
+
+      <!-- Genres -->
+      <div class="genres-list" *ngIf="movie.genres?.length">
+        <a *ngFor="let g of movie.genres; trackBy: trackByGenreId" [routerLink]="['/movies/genre', g.id]" class="genre-chip">
+          {{ g.name }}
+        </a>
+      </div>
+
+      <!-- Overview -->
+      <div class="detail-section">
+        <h3>{{ 'movie.overview' | translate }}</h3>
+        <p>{{ movie.overview || ('movie.noOverview' | translate) }}</p>
+      </div>
+
+      <p *ngIf="director" class="director"><strong>Realizador:</strong> {{ director }}</p>
+
+      <!-- Actions -->
+      <div class="detail-actions" *ngIf="auth.isLoggedIn && !membershipLoading">
+        <button class="btn" [class.btn-outline]="!inWatchlist" [class.btn-primary]="inWatchlist" (click)="toggleWatchlist()">
+          {{ inWatchlist ? ('movie.removeFromWatchlist' | translate) : ('movie.addToWatchlist' | translate) }}
+        </button>
+        <button class="btn" [class.btn-outline]="!isFavorite" [class.btn-primary]="isFavorite" (click)="toggleFavorite()">
+          {{ isFavorite ? ('movie.removeFavorite' | translate) : ('movie.addFavorite' | translate) }}
+        </button>
+        <button *ngIf="trailerKey" class="btn btn-outline" (click)="showTrailer = true">
+          ▶ {{ 'movie.trailer' | translate }}
+        </button>
+      </div>
+
+      <!-- Rating -->
+      <div class="rating-box card" *ngIf="auth.isLoggedIn">
+        <h3>{{ 'movie.yourRating' | translate }}</h3>
+        <app-star-rating [(value)]="ratingScore"></app-star-rating>
+        <textarea [(ngModel)]="ratingReview" class="form-control" rows="3"
+                  [placeholder]="'ratings.review' | translate" style="margin-top:12px"></textarea>
+        <div class="alert alert-success" *ngIf="ratingMsg" style="margin-top:8px">{{ ratingMsg }}</div>
+        <button class="btn btn-primary btn-sm" style="margin-top:12px" (click)="submitRating()" [disabled]="!ratingScore">
+          {{ 'movie.addRating' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cast -->
+  <div class="container" *ngIf="topCast.length">
+    <div class="detail-section">
+      <h2 class="section-title">{{ 'movie.cast' | translate }}</h2>
+      <div class="cast-grid">
+        <div class="cast-card" *ngFor="let c of topCast; trackBy: trackByCastId">
+          <img [src]="movieService.posterUrl(c.profile_path, 'w185')" [alt]="c.name"
+               onerror="this.src='assets/no-avatar.png'" />
+          <p class="cast-name">{{ c.name }}</p>
+          <p class="cast-char">{{ c.character }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Similar -->
+  <div class="container" *ngIf="movie.similar?.results?.length">
+    <section class="section">
+      <h2 class="section-title">{{ 'movie.similar' | translate }}</h2>
+      <div class="movies-grid">
+        <app-movie-card *ngFor="let m of movie.similar!.results!.slice(0,8); trackBy: trackByMovieId" [movie]="m"></app-movie-card>
+      </div>
+    </section>
+  </div>
+
+</div>
+
+<app-skeleton *ngIf="loading" variant="detail"></app-skeleton>
+
+<!-- Trailer Modal -->
+<div class="modal-overlay" *ngIf="showTrailer" (click)="showTrailer = false">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="showTrailer = false">✕</button>
+    <iframe [src]="'https://www.youtube.com/embed/' + trailerKey | safeUrl"
+            frameborder="0" allowfullscreen></iframe>
+  </div>
+</div>

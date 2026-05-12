@@ -1,0 +1,76 @@
+<!-- profile.component.html -->
+<div class="pt-navbar container profile-page">
+  <div class="profile-header">
+    <div class="avatar-large">{{ auth.currentUser?.name?.charAt(0) | uppercase }}</div>
+    <div>
+      <h1>{{ auth.currentUser?.name }}</h1>
+      <p class="text-muted">{{ auth.currentUser?.email }}</p>
+    </div>
+  </div>
+
+  <div class="profile-nav">
+    <a routerLink="/profile/ratings"   class="btn btn-outline btn-sm">{{ 'profile.myRatings' | translate }}</a>
+    <a routerLink="/profile/watchlist" class="btn btn-outline btn-sm">{{ 'profile.myWatchlist' | translate }}</a>
+    <a routerLink="/profile/favorites" class="btn btn-outline btn-sm">{{ 'profile.myFavorites' | translate }}</a>
+  </div>
+
+  <div class="profile-tabs">
+    <button [class.active]="tab==='profile'"  (click)="tab='profile'">{{ 'profile.editProfile' | translate }}</button>
+    <button [class.active]="tab==='password'" (click)="tab='password'">{{ 'profile.changePassword' | translate }}</button>
+    <button [class.active]="tab==='export'"   (click)="tab='export'">{{ 'export.title' | translate }}</button>
+  </div>
+
+  <!-- Edit Profile -->
+  <div class="tab-content card" *ngIf="tab==='profile'">
+    <div class="alert alert-success" *ngIf="profileMsg">{{ profileMsg }}</div>
+    <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+      <div class="form-group">
+        <label class="form-label">{{ 'auth.name' | translate }}</label>
+        <input formControlName="name" type="text" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">{{ 'profile.language' | translate }}</label>
+        <select formControlName="preferred_lang" class="form-control">
+          <option value="pt">Português</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">{{ 'profile.theme' | translate }}</label>
+        <select formControlName="theme" class="form-control">
+          <option value="light">{{ 'profile.light' | translate }}</option>
+          <option value="dark">{{ 'profile.dark' | translate }}</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">{{ 'profile.save' | translate }}</button>
+    </form>
+  </div>
+
+  <!-- Change Password -->
+  <div class="tab-content card" *ngIf="tab==='password'">
+    <div class="alert alert-success" *ngIf="passwordMsg">{{ passwordMsg }}</div>
+    <div class="alert alert-error"   *ngIf="passwordErr">{{ passwordErr }}</div>
+    <form [formGroup]="passwordForm" (ngSubmit)="savePassword()">
+      <div class="form-group">
+        <label class="form-label">{{ 'profile.currentPassword' | translate }}</label>
+        <input formControlName="current_password" type="password" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">{{ 'profile.newPassword' | translate }}</label>
+        <input formControlName="new_password" type="password" class="form-control" />
+      </div>
+      <button type="submit" class="btn btn-primary">{{ 'profile.save' | translate }}</button>
+    </form>
+  </div>
+
+  <!-- Export -->
+  <div class="tab-content card" *ngIf="tab==='export'">
+    <h3 class="tab-title">{{ 'export.title' | translate }}</h3>
+    <div class="export-grid">
+      <button class="btn btn-outline" (click)="exportService.watchlistCsv()">{{ 'export.watchlistCsv' | translate }}</button>
+      <button class="btn btn-outline" (click)="exportService.ratingsCsv()">{{ 'export.ratingsCsv' | translate }}</button>
+      <button class="btn btn-outline" (click)="exportService.favoritesCsv()">{{ 'export.favoritesCsv' | translate }}</button>
+      <button class="btn btn-outline" (click)="exportService.ratingsPdf()">{{ 'export.ratingsPdf' | translate }}</button>
+    </div>
+  </div>
+</div>

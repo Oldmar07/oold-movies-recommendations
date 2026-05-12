@@ -1,0 +1,50 @@
+/* Partilhado entre todas as páginas de auth — inclui via styles.css ou por cada componente */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--bg);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 36px 32px;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.auth-logo {
+  width: auto;
+  height: 48px;
+  margin: 0 auto 8px;
+  object-fit: contain;
+}
+.auth-header h1 { font-size: 26px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+.auth-header p  { color: var(--text-secondary); font-size: 15px; }
+
+.forgot-link {
+  display: block;
+  text-align: right;
+  font-size: 13px;
+  color: var(--primary);
+  margin-bottom: 16px;
+  margin-top: -8px;
+  text-decoration: none;
+}
+.forgot-link:hover { text-decoration: underline; }
+
+.w-full { width: 100%; justify-content: center; }
+
+.auth-switch {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+.auth-switch a { color: var(--primary); font-weight: 600; text-decoration: none; }
+.auth-switch a:hover { text-decoration: underline; }
