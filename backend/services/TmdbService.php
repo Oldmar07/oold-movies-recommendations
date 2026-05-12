@@ -17,31 +17,41 @@ class TmdbService
 
     public function searchMovies(string $query, int $page = 1, string $lang = 'pt-BR'): array
     {
-        return $this->request('/search/movie', [
+        $data = $this->request('/search/movie', [
             'query'    => $query,
             'page'     => $page,
             'language' => $lang,
         ]);
+        $this->cacheResults($data);
+        return $data;
     }
 
     public function getPopular(int $page = 1, string $lang = 'pt-BR'): array
     {
-        return $this->request('/movie/popular', ['page' => $page, 'language' => $lang]);
+        $data = $this->request('/movie/popular', ['page' => $page, 'language' => $lang]);
+        $this->cacheResults($data);
+        return $data;
     }
 
     public function getTopRated(int $page = 1, string $lang = 'pt-BR'): array
     {
-        return $this->request('/movie/top_rated', ['page' => $page, 'language' => $lang]);
+        $data = $this->request('/movie/top_rated', ['page' => $page, 'language' => $lang]);
+        $this->cacheResults($data);
+        return $data;
     }
 
     public function getNowPlaying(int $page = 1, string $lang = 'pt-BR'): array
     {
-        return $this->request('/movie/now_playing', ['page' => $page, 'language' => $lang]);
+        $data = $this->request('/movie/now_playing', ['page' => $page, 'language' => $lang]);
+        $this->cacheResults($data);
+        return $data;
     }
 
     public function getUpcoming(int $page = 1, string $lang = 'pt-BR'): array
     {
-        return $this->request('/movie/upcoming', ['page' => $page, 'language' => $lang]);
+        $data = $this->request('/movie/upcoming', ['page' => $page, 'language' => $lang]);
+        $this->cacheResults($data);
+        return $data;
     }
 
     public function getMovieDetails(int $tmdbId, string $lang = 'pt-BR'): array
@@ -77,12 +87,14 @@ class TmdbService
 
     public function getByGenre(int $genreId, int $page = 1, string $lang = 'pt-BR'): array
     {
-        return $this->request('/discover/movie', [
+        $data = $this->request('/discover/movie', [
             'with_genres' => $genreId,
             'page'        => $page,
             'language'    => $lang,
             'sort_by'     => 'popularity.desc',
         ]);
+        $this->cacheResults($data);
+        return $data;
     }
 
     public function getGenres(string $lang = 'pt-BR'): array
@@ -154,6 +166,13 @@ class TmdbService
 
     private function request(string $endpoint, array $params = []): array
     {
+        ksort($params);
+        $cacheFile = $this->requestCacheFile($endpoint, $params);
+        $cached = $this->readRequestCache($cacheFile, false);
+        if ($cached !== null) {
+            return $cached;
+        }
+
         $params['api_key'] = TMDB_API_KEY;
         $url = TMDB_BASE_URL . $endpoint . '?' . http_build_query($params);
 
@@ -168,10 +187,50 @@ class TmdbService
 
         if ($raw === false) {
             error_log("[TMDB] Request failed: $url");
-            return [];
+            return $this->readRequestCache($cacheFile, true) ?? [];
         }
 
-        return json_decode($raw, true) ?? [];
+        $data = json_decode($raw, true) ?? [];
+        if (!empty($data)) {
+            $this->writeRequestCache($cacheFile, $data);
+        }
+
+        return $data;
+    }
+
+    private function requestCacheFile(string $endpoint, array $params): string
+    {
+        $key = hash('sha256', $endpoint . '?' . http_build_query($params));
+        return dirname(__DIR__) . "/cache/tmdb/{$key}.json";
+    }
+
+    private function readRequestCache(string $file, bool $allowExpired): ?array
+    {
+        if (!is_file($file)) {
+            return null;
+        }
+
+        if (!$allowExpired && filemtime($file) + TMDB_CACHE_TTL < time()) {
+            return null;
+        }
+
+        $raw = @file_get_contents($file);
+        if ($raw === false) {
+            return null;
+        }
+
+        $data = json_decode($raw, true);
+        return is_array($data) ? $data : null;
+    }
+
+    private function writeRequestCache(string $file, array $data): void
+    {
+        $dir = dirname($file);
+        if (!is_dir($dir) && !@mkdir($dir, 0775, true) && !is_dir($dir)) {
+            return;
+        }
+
+        @file_put_contents($file, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), LOCK_EX);
     }
 
     // ----------------------------------------------------------
@@ -186,6 +245,10 @@ class TmdbService
             error_log('[TMDB] Cache skipped: ' . $e->getMessage());
             return;
         }
+
+        // Garante que temos um ID válido e evita sobrescrever cache completo com dados parciais
+        $tmdbId = $movie['id'] ?? $movie['tmdb_id'] ?? null;
+        if (!$tmdbId) return;
 
         $genres = isset($movie['genres']) ? json_encode($movie['genres']) : null;
 
@@ -207,7 +270,7 @@ class TmdbService
                 popularity=VALUES(popularity),
                 cached_at=NOW()',
             [
-                $movie['id'],
+                $tmdbId,
                 $movie['title'] ?? '',
                 $movie['original_title'] ?? null,
                 $movie['overview'] ?? null,
@@ -220,6 +283,15 @@ class TmdbService
                 $movie['popularity'] ?? null,
             ]
         );
+    }
+
+    private function cacheResults(array $data): void
+    {
+        if (!empty($data['results'])) {
+            foreach ($data['results'] as $movie) {
+                $this->cacheMovie($movie);
+            }
+        }
     }
 
     public static function posterUrl(string $path, string $size = 'w500'): string

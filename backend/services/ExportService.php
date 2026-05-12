@@ -19,7 +19,7 @@ class ExportService
             'SELECT mc.title, mc.release_date, mc.vote_average,
                     w.watched, w.added_at, w.watched_at
              FROM watchlist w
-             JOIN movies_cache mc ON mc.tmdb_id = w.tmdb_id
+             LEFT JOIN movies_cache mc ON mc.tmdb_id = w.tmdb_id
              WHERE w.user_id = ?
              ORDER BY w.added_at DESC',
             [$userId]

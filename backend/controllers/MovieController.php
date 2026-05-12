@@ -284,12 +284,14 @@ class MovieController
         foreach ($rows as &$row) {
             $hasFallbackTitle = isset($row['title']) && strpos((string) $row['title'], 'Filme #') === 0;
             if (!empty($row['title']) && !$hasFallbackTitle && !empty($row['poster_path'])) {
+                $this->normalizeMovieRow($row);
                 continue;
             }
 
             $details = $this->tmdb->getMovieDetails((int) $row['tmdb_id'], $lang);
             if (!$details) {
                 $row['title'] = 'Filme #' . $row['tmdb_id'];
+                $this->normalizeMovieRow($row);
                 continue;
             }
 
@@ -297,10 +299,34 @@ class MovieController
             $row['poster_path'] = $details['poster_path'] ?? null;
             $row['release_date'] = $details['release_date'] ?? null;
             $row['vote_average'] = $details['vote_average'] ?? null;
+            $this->normalizeMovieRow($row);
         }
         unset($row);
 
         return $rows;
+    }
+
+    private function normalizeMovieRow(array &$row): void
+    {
+        if (isset($row['id'])) {
+            $row['id'] = (int) $row['id'];
+        }
+
+        if (isset($row['user_id'])) {
+            $row['user_id'] = (int) $row['user_id'];
+        }
+
+        if (isset($row['tmdb_id'])) {
+            $row['tmdb_id'] = (int) $row['tmdb_id'];
+        }
+
+        if (array_key_exists('watched', $row)) {
+            $row['watched'] = (bool) $row['watched'];
+        }
+
+        if (array_key_exists('vote_average', $row)) {
+            $row['vote_average'] = $row['vote_average'] === null ? null : (float) $row['vote_average'];
+        }
     }
 
     private function json(): array
